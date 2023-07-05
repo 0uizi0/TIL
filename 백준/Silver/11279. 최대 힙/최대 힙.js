@@ -100,7 +100,8 @@ let result = [];
 for (let i = 0; i < N; i++) {
   const el = operations[i];
   if (el === 0) {
-    const returnValue = output.size() === 0 ? 0 : output.pop()
+    // const returnValue = output.size() === 0 ? 0 : output.pop()
+    const returnValue = output.pop()
     result.push(returnValue);
   } else if (Number.isInteger(el) && el > 0) {
     output.push(el)
