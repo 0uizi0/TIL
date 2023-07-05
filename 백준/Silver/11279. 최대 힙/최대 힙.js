@@ -1,3 +1,31 @@
+/** INSERT Algorithm: PUSH
+ * 1. 원소를 맨 마지막에 삽입
+ * 2. 부모 노드와 비교해 더 크다면 자리 변경
+*/
+
+/** EXTRACT Algorithm : POP
+ * 1. 예외처리
+ *    1-1. 배열이 비어있음 => 0 출력
+ *    1-2. 비교할 자식 노드들이 없음 => 바로 pop
+ * 2. 힙의 루트 노드를 저장 - returnValue
+ * 3. 힙의 루트 노드를 추출하고, 힙의 마지막 원소를 루트의 위치로 변경
+ * 4. 변경된 노드와 자식 노드들 비교 후 교체
+*/
+
+/** heap property 충족하기
+ * 1. complete binary tree를 만족해야함
+ *    => 왼쪽 자식 노드는 없고, 오른쪽 자식 노드가 있는 경우는 없음
+ * 2. 부모 >= 자식
+ */
+
+/**
+ * Heap의 표현
+ * 루트 노드 : A[1]
+ * A[i] 부모 : A[i/2]
+ * A[i]의 왼쪽 자식 = A[2i]
+ * A[i]의 오른쪽 자식 = A[2i+1]
+ */
+
 class Heap {
   constructor() {
     this.heap = [null];
@@ -63,8 +91,8 @@ const fs = require("fs");
 const filePath = process.platform == "linux" ? "/dev/stdin" : "./input.txt";
 var input = fs.readFileSync(filePath).toString().split("\n").map((el) => Number(el));
 
-const N = parseInt(input[0]);
-const operations = input.slice(1).map((el) => parseInt(el));
+const N = input[0];
+const operations = input.slice(1)
 
 const output = new Heap();
 let result = [];
