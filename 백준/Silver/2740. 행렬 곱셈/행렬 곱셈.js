@@ -14,9 +14,7 @@ const result = Array.from({ length: N }, () => Array(K).fill(0));
 // divide and conquer
 for (let i = 0; i < N; i++) {
   for (let j = 0; j < K; j++) {
-    for (let k = 0; k < M; k++) {
-      result[i][j] += A[i][k] * B[k][j];
-    }
+    result[i][j] += A[i].reduce((sum, val, idx) => sum + val * B[idx][j], 0);
   }
 }
 
