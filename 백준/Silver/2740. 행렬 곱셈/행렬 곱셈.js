@@ -4,10 +4,9 @@ const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
 // input
 const [N, M] = input.shift().split(" ").map(Number);
-const A = input.slice(0, N).map((line) => line.split(" ").map(Number));
-const [[_, K], ...B] = input
-  .slice(N)
-  .map((line) => line.split(" ").map(Number));
+const A = input.splice(0, N).map((line) => line.split(" ").map(Number));
+
+const [[_, K], ...B] = input.map((line) => line.split(" ").map(Number));
 
 const result = Array.from({ length: N }, () => Array(K).fill(0));
 
