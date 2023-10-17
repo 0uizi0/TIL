@@ -1,32 +1,34 @@
 function checkRight(stack) {
   let checkStack = [];
-  let opens = [`{`, `(`, `[`];
-  let closes = [`]`, `}`, `)`];
 
-  if (closes.includes(stack[0])) return 0;
+  let hashMap = new Map();
+  hashMap.set("{", "}");
+  hashMap.set("[", "]");
+  hashMap.set("(", ")");
+
+  if (!hashMap.has(stack[0]) || hashMap.has(stack[stack.length - 1])) return 0;
 
   for (let i = 0; i < stack.length; i++) {
     let el = stack[i];
+    let lastEl = checkStack[checkStack.length - 1];
 
-    if (opens.includes(el)) checkStack.push(el);
-
-    if (el == `}` && checkStack[checkStack.length - 1] == `{`) checkStack.pop();
-    if (el == `]` && checkStack[checkStack.length - 1] == `[`) checkStack.pop();
-    if (el == `)` && checkStack[checkStack.length - 1] == `(`) checkStack.pop();
+    if (hashMap.has(el)) checkStack.push(el);
+    if (el == hashMap.get(lastEl)) checkStack.pop();
   }
-
   return checkStack.length == 0 ? 1 : 0;
 }
 
 const solution = (s) => {
-  let myStack = s.split("");
   let cnt = 0;
 
-  for (let i = 0; i < myStack.length; i++) {
-    cnt += checkRight(myStack);
-    let newItem = myStack.shift();
-    myStack.push(newItem);
-  }
+  let newstring = s.repeat(2);
+  let index = 0,
+    n = s.length;
 
+  while (index < n) {
+    let myStack = newstring.slice(index, n + index);
+    cnt += checkRight(myStack);
+    index++;
+  }
   return cnt;
 };
