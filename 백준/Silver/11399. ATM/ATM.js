@@ -1,29 +1,15 @@
-// input
-const { time } = require("console");
 const fs = require("fs");
 const filePath = process.platform == "linux" ? "/dev/stdin" : "./input.txt";
-const [[N], times] = fs
-  .readFileSync(filePath)
+const [N, ...input] = fs.readFileSync(filePath).toString().trim().split("\n");
+const times = input
   .toString()
-  .trim()
-  .split("\n")
-  .map((line) => line.split(" ").map(Number));
+  .split(" ")
+  .map(Number)
+  .sort((a, b) => a - b);
+let result = 0;
 
-times.sort((a, b) => a - b);
-let order = 0,
-  sum = 0,
-  accTime = 0;
+times.forEach((v, i) => {
+  result += v * (N - i);
+});
 
-// GREEDY
-function greedy(order) {
-  if (order === N) return sum;
-
-  accTime += times[order];
-  sum += accTime;
-  order++;
-
-  return greedy(order);
-}
-
-// output
-console.log(greedy(order));
+console.log(result);
