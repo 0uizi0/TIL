@@ -1,90 +1,69 @@
-class Node {
-  constructor(data) {
-    this.data = data;
-    this.next = null;
-  }
-}
-
 class Queue {
-  #first;
-  #last;
-  #length;
-
   constructor() {
-    this.#first = null;
-    this.#last = null;
-    this.#length = 0;
+    this.items = {};
+    this.headIndex = 0;
+    this.tailIndex = 0;
   }
-
-  isEmpty() {
-    return this.#length === 0
+  enqueue(item) {
+    this.items[this.tailIndex] = item;
+    this.tailIndex += 1;
   }
-
-  enqueue(data) {
-    const newNode = new Node(data);
-    if (this.isEmpty()) {
-      this.#first = newNode;
-    } else {
-      this.#last.next = newNode;
-    }
-    this.#last = newNode;
-    this.#length += 1
-
-    // console.log('newNode: ', newNode)
-  }
-
   dequeue() {
-    if (this.isEmpty()) throw new Error('Queue Empty')
-    const deleteNode = this.#first;
-    this.#length -= 1;
-
-    if (this.isEmpty()) this.#last = null;
-    this.#first = deleteNode.next;
-
-    // console.log('deleteNode: ',deleteNode)
-
-    return deleteNode.data;
+    const item = this.items[this.headIndex];
+    delete this.items[this.headIndex];
+    this.headIndex += 1;
+    return item;
+  }
+  peek() {
+    return this.items[this.headIndex];
+  }
+  get length() {
+    return this.tailIndex - this.headIndex;
+  }
+  get isEmpty() {
+    return this.length === 0;
   }
 }
 
 // input
 const fs = require("fs");
 const filePath = process.platform == "linux" ? "/dev/stdin" : "./input.txt";
-const [[N,M,R], ...edges] = fs.readFileSync(filePath).toString().trim().split('\n').map((line)=>line.split(' ').map(Number))
+const [[N, M, R], ...edges] = fs
+  .readFileSync(filePath)
+  .toString()
+  .trim()
+  .split("\n")
+  .map((line) => line.split(" ").map(Number));
 
 // G (graph)
-const G = Array.from(new Array(N),()=>[])
+const G = Array.from(new Array(N + 1), () => []);
 
-edges.forEach(([u,v]) => {
-  G[u-1].push(v-1)
-  G[v-1].push(u-1)
-})
+edges.forEach(([u, v]) => {
+  G[u].push(v);
+  G[v].push(u);
+});
 
-G.forEach((node) => node.sort((a,b)=>a-b))
+G.forEach((node) => node.sort((a, b) => a - b));
 
 // BFS
-const visited = new Array(N).fill(0)
+const visited = new Array(N + 1).fill(0);
 const Q = new Queue();
 
-Q.enqueue(R-1)
+Q.enqueue(R);
 let visitOrder = 1;
 
-while (!Q.isEmpty()) {
+while (!Q.isEmpty) {
   const cur = Q.dequeue();
-  // console.log('cur:',cur)
-  // console.log('visited-pre:',visited)
 
   if (!visited[cur]) {
     visited[cur] = visitOrder;
-    visitOrder += 1
+    visitOrder += 1;
 
     G[cur].forEach((next) => {
-      if (!visited[next]) Q.enqueue(next)
-    })
+      if (!visited[next]) Q.enqueue(next);
+    });
   }
-  // console.log('visited-next:',visited)
-  // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@')
 }
 
 // output
-console.log(visited.join('\n'))
+console.log(visited.slice(1).join("\n"));
